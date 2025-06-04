@@ -1,0 +1,12 @@
+Motors/Motors.ino.eep
+Motors/Motors.ino.elf
+Motors/Motors.ino.hex
+Motors/Motors.ino.with_bootloader.bin
+Motors/Motors.ino.with_bootloader.hex
+Sensors/Sensors.ino.eep
+Sensors/Sensors.ino.elf
+Sensors/Sensors.ino.hex
+Sensors/Sensors.ino.with_bootloader.bin
+Sensors/Sensors.ino.with_bootloader.hex
+__pycache__
+.vscode
