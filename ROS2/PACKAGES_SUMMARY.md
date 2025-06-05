@@ -85,6 +85,11 @@ source install/setup.bash
 
 ## 📊 Использование
 
+### Удалённый запуск по ssh
+```bash
+ssh -i /home/seko/.ssh/id_rsa orangepi@192.168.2.141 'cd ~/ros2_ws && ./run_robot.sh full'
+```
+
 ### Отдельные компоненты
 ```bash
 ros2 run robot_odometry odometry_node
