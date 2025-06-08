@@ -1,0 +1,10 @@
+data = bytes([
+    0xFA, 0xDF, 0xE9, 0x73, 0x20, 0x80, 0x00, 0x00, 0x20, 0x80, 0x00, 0x00, 0x80, 0x00, 0x00, 0x80, 
+])
+
+checksum = 0
+for i in range(0, len(data), 2):
+    word = int.from_bytes(data[i:i+2], byteorder='little')
+    checksum = ((checksum << 1) + word) & 0xFFFFFFFF
+checksum = (checksum + (checksum >> 15)) & 0x7FFF
+print(hex(checksum))

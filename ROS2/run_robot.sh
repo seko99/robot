@@ -46,16 +46,21 @@ elif [ "$1" = "teleop" ]; then
 elif [ "$1" = "sonar" ]; then
     echo "Запуск сонара..."
     ros2 run robot_sonar sonar_node
+elif [ "$1" = "lidar" ]; then
+    echo "Запуск лидара..."
+    ros2 run lds01rr_lidar_ros2 lidar_node
 elif [ "$1" = "keyboard" ]; then
     echo "Запуск управления с клавиатуры..."
     ros2 run teleop_twist_keyboard teleop_twist_keyboard
 else
     echo "Использование:"
-    echo "  $0 [full|odom|teleop|sonar|keyboard]"
+    echo "  $0 [full|odom|teleop|sonar|lidar|keyboard]"
     echo ""
     echo "Примеры:"
     echo "  $0 full      # Запуск всех компонентов"
     echo "  $0 odom      # Только одометрия"
     echo "  $0 teleop    # Только телеуправление"
+    echo "  $0 sonar     # Только сонар"
+    echo "  $0 lidar     # Только лидар"
     echo "  $0 keyboard  # Управление с клавиатуры"
 fi

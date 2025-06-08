@@ -34,6 +34,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 rm -rf src/robot_*
 
 # Копирование новых пакетов
+cp -r "$SCRIPT_DIR/lds01rr_lidar_ros2" src/
 cp -r "$SCRIPT_DIR/robot_odometry" src/
 cp -r "$SCRIPT_DIR/robot_teleop" src/
 cp -r "$SCRIPT_DIR/robot_sonar" src/
@@ -41,7 +42,7 @@ cp -r "$SCRIPT_DIR/robot_bringup" src/
 
 # Сборка пакетов
 echo "Сборка пакетов..."
-colcon build --packages-select robot_odometry robot_teleop robot_sonar robot_bringup
+colcon build --packages-select lds01rr_lidar_ros2 robot_odometry robot_teleop robot_sonar robot_bringup
 
 if [ $? -eq 0 ]; then
     echo "=== Сборка завершена успешно! ==="
