@@ -17,7 +17,7 @@ class LDS01RRNodeV2(Node):
         super().__init__('lds01rr_node_v2')
         
         # Declare parameters
-        self.declare_parameter('serial_port', '/dev/ttyUSB0')
+        self.declare_parameter('serial_port', '/dev/ttyS5')
         self.declare_parameter('baud_rate', 115200)
         self.declare_parameter('frame_id', 'lidar_link')
         self.declare_parameter('publish_rate', 10.0)

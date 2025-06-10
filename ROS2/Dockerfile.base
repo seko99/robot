@@ -1,0 +1,24 @@
+# Базовый образ для всех ROS2 нод
+FROM osrf/ros:jazzy-desktop
+
+# Установка необходимых системных пакетов
+RUN apt-get update && apt-get install -y \
+    python3-pip \
+    python3-colcon-common-extensions \
+    python3-rosdep \
+    udev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Установка Python зависимостей
+COPY requirements.txt /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
+
+# Создание рабочей директории
+WORKDIR /ros2_ws
+
+# Настройка окружения ROS2
+RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
+RUN echo "source /ros2_ws/install/setup.bash" >> ~/.bashrc
+
+# Инициализация rosdep
+RUN rosdep init && rosdep update 

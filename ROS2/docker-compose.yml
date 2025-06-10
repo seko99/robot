@@ -1,0 +1,117 @@
+version: "3.8"
+
+services:
+  # ROS2 Master/DDS Discovery
+  ros2-daemon:
+    image: ros:jazzy-desktop
+    container_name: ros2-daemon
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
+      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - ROS_LOCALHOST_ONLY=0
+    command: ros2 daemon start
+    restart: unless-stopped
+
+  # Сонар нода
+  robot-sonar:
+    build:
+      context: ./robot_sonar
+      dockerfile: Dockerfile
+    container_name: robot-sonar
+    network_mode: host
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
+      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - ROS_LOCALHOST_ONLY=0
+    volumes:
+      - /dev:/dev
+    privileged: true
+    restart: unless-stopped
+    depends_on:
+      - ros2-daemon
+
+  # Одометрия нода
+  robot-odometry:
+    build:
+      context: ./robot_odometry
+      dockerfile: Dockerfile
+    container_name: robot-odometry
+    network_mode: host
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
+      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - ROS_LOCALHOST_ONLY=0
+    volumes:
+      - /dev:/dev
+    privileged: true
+    restart: unless-stopped
+    depends_on:
+      - ros2-daemon
+
+  # Лидар нода
+  lidar:
+    build:
+      context: ./lds01rr_lidar_ros2
+      dockerfile: Dockerfile
+    container_name: lidar
+    network_mode: host
+    devices:
+      - /dev/ttyUSB0:/dev/ttyS5
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
+      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - ROS_LOCALHOST_ONLY=0
+    volumes:
+      - /dev:/dev
+    privileged: true
+    restart: unless-stopped
+    depends_on:
+      - ros2-daemon
+
+  # Телеоп нода (опционально)
+  robot-teleop:
+    build:
+      context: ./robot_teleop
+      dockerfile: Dockerfile
+    container_name: robot-teleop
+    network_mode: host
+    stdin_open: true
+    tty: true
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
+      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - ROS_LOCALHOST_ONLY=0
+    restart: "no" # Не перезапускать автоматически, так как это интерактивная нода
+    depends_on:
+      - ros2-daemon
+
+  # RViz для визуализации (опционально)
+  rviz:
+    image: osrf/ros:jazzy-desktop
+    container_name: rviz
+    network_mode: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
+      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - ROS_LOCALHOST_ONLY=0
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - $HOME/.Xauthority:/root/.Xauthority:rw
+    command: rviz2
+    restart: "no"
+    depends_on:
+      - ros2-daemon

@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  # ROS2 Discovery Server
+  discovery-server:
+    image: osrf/ros:jazzy-desktop
+    container_name: discovery-server
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+    command: fastdds discovery --server-id 0 --port 11811
+    restart: unless-stopped
+
+  # Сонар нода
+  robot-sonar:
+    build:
+      context: ./robot_sonar
+      dockerfile: Dockerfile
+    container_name: robot-sonar
+    network_mode: host
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - ROS_DISCOVERY_SERVER=${ROBOT_IP:-localhost}:11811
+      - ROS_LOCALHOST_ONLY=0
+    volumes:
+      - /dev:/dev
+    privileged: true
+    restart: unless-stopped
+    depends_on:
+      - discovery-server
+
+  # Одометрия нода
+  robot-odometry:
+    build:
+      context: ./robot_odometry
+      dockerfile: Dockerfile
+    container_name: robot-odometry
+    network_mode: host
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - ROS_DISCOVERY_SERVER=${ROBOT_IP:-localhost}:11811
+      - ROS_LOCALHOST_ONLY=0
+    volumes:
+      - /dev:/dev
+    privileged: true
+    restart: unless-stopped
+    depends_on:
+      - discovery-server
+
+  # Лидар нода
+  lidar:
+    build:
+      context: ./lds01rr_lidar_ros2
+      dockerfile: Dockerfile
+    container_name: lidar
+    network_mode: host
+    devices:
+      - /dev/ttyUSB0:/dev/ttyS5
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - ROS_DISCOVERY_SERVER=${ROBOT_IP:-localhost}:11811
+      - ROS_LOCALHOST_ONLY=0
+    volumes:
+      - /dev:/dev
+    privileged: true
+    restart: unless-stopped
+    depends_on:
+      - discovery-server

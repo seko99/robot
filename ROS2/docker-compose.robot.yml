@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  # Сонар нода
+  robot-sonar:
+    build:
+      context: ./robot_sonar
+      dockerfile: Dockerfile
+    container_name: robot-sonar
+    network_mode: host
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
+      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - ROS_LOCALHOST_ONLY=0
+    volumes:
+      - /dev:/dev
+    privileged: true
+    restart: unless-stopped
+
+  # Одометрия нода
+  robot-odometry:
+    build:
+      context: ./robot_odometry
+      dockerfile: Dockerfile
+    container_name: robot-odometry
+    network_mode: host
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
+      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - ROS_LOCALHOST_ONLY=0
+    volumes:
+      - /dev:/dev
+    privileged: true
+    restart: unless-stopped
+
+  # Лидар нода
+  lidar:
+    build:
+      context: ./lds01rr_lidar_ros2
+      dockerfile: Dockerfile
+    container_name: lidar
+    network_mode: host
+    devices:
+      - /dev/ttyUSB0:/dev/ttyS5
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
+      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - ROS_LOCALHOST_ONLY=0
+    volumes:
+      - /dev:/dev
+    privileged: true
+    restart: unless-stopped

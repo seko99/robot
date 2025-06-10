@@ -37,7 +37,7 @@ class LDS01RRDriverV2:
         Initialize the LDS01RR driver v2
         
         Args:
-            serial_port: Serial port device (e.g., '/dev/ttyUSB0')
+            serial_port: Serial port device (e.g., '/dev/ttyS5')
             baud_rate: Baud rate for serial communication
         """
         self.serial_port_name = serial_port
