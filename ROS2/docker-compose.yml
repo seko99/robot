@@ -3,7 +3,7 @@ version: "3.8"
 services:
   # ROS2 Master/DDS Discovery
   ros2-daemon:
-    image: ros:jazzy-desktop
+    image: ros:humble
     container_name: ros2-daemon
     network_mode: host
     environment:

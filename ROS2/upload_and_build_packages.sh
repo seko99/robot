@@ -27,6 +27,14 @@ if ! ssh -i "$SSH_KEY" -o ConnectTimeout=5 "$REMOTE_USER@$REMOTE_HOST" "echo 'П
     exit 1
 fi
 
+# Создание workspace на роботе если не существует
+echo "Создание ROS2 workspace на роботе..."
+ssh -i "$SSH_KEY" "$REMOTE_USER@$REMOTE_HOST" "mkdir -p ~/ros2_ws/src"
+
+# Очистка старых пакетов
+echo "Очистка старых пакетов..."
+ssh -i "$SSH_KEY" "$REMOTE_USER@$REMOTE_HOST" "rm -rf ~/ros2_ws/src/robot_*"
+
 # Загрузка пакетов
 echo "Загрузка пакетов..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -51,3 +59,27 @@ scp -i "$SSH_KEY" "$SCRIPT_DIR/requirements.txt" "$REMOTE_USER@$REMOTE_HOST:~/ro
 scp -i "$SSH_KEY" "$SCRIPT_DIR/docker-compose.discovery.yml" "$REMOTE_USER@$REMOTE_HOST:~/ros2_ws/"
 scp -i "$SSH_KEY" "$SCRIPT_DIR/docker-compose.robot.yml" "$REMOTE_USER@$REMOTE_HOST:~/ros2_ws/"
 scp -i "$SSH_KEY" "$SCRIPT_DIR/docker-compose.yml" "$REMOTE_USER@$REMOTE_HOST:~/ros2_ws/"
+
+# Сборка на роботе с подробной диагностикой
+echo "Запуск сборки с диагностикой на роботе..."
+ssh -i "$SSH_KEY" "$REMOTE_USER@$REMOTE_HOST" << 'EOF'
+cd ~/ros2_ws
+chmod +x build_on_robot.sh diagnose_packages.sh
+./build_on_robot.sh
+EOF
+
+if [ $? -eq 0 ]; then
+    echo ""
+    echo "=== Загрузка и установка завершена успешно! ==="
+    echo ""
+    echo "Для запуска на роботе выполните:"
+    echo "  ssh -i $SSH_KEY $REMOTE_USER@$REMOTE_HOST"
+    echo "  cd ~/ros2_ws"
+    echo "  ./run_robot.sh full"
+    echo ""
+    echo "Или удаленно:"
+    echo "  ssh -i $SSH_KEY $REMOTE_USER@$REMOTE_HOST 'cd ~/ros2_ws && ./run_robot.sh full'"
+else
+    echo "=== Ошибка при установке на роботе! ==="
+    exit 1
+fi

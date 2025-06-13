@@ -3,7 +3,7 @@ version: "3.8"
 services:
   # ROS2 Discovery Server
   discovery-server:
-    image: osrf/ros:jazzy-desktop
+    image: ros:humble
     container_name: discovery-server
     network_mode: host
     environment:

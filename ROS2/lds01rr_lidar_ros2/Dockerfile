@@ -1,4 +1,4 @@
-FROM osrf/ros:jazzy-desktop
+FROM ros:humble
 
 # Установка необходимых системных пакетов
 RUN apt-get update && apt-get install -y \
@@ -18,20 +18,20 @@ WORKDIR /ros2_ws
 COPY . /ros2_ws/src/lds01rr_lidar_ros2/
 
 # Инициализация rosdep
-RUN rosdep init && rosdep update
+RUN rosdep update
 
 # Установка зависимостей пакета
 RUN cd /ros2_ws && rosdep install --from-paths src --ignore-src -r -y
 
 # Сборка пакета
 RUN cd /ros2_ws && \
-    . /opt/ros/jazzy/setup.sh && \
+    . /opt/ros/humble/setup.sh && \
     colcon build --packages-select lds01rr_lidar_ros2
 
-# Настройка окружения
-RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc && \
-    echo "source /ros2_ws/install/setup.bash" >> ~/.bashrc
+# Копирование и настройка скрипта запуска
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Точка входа
-ENTRYPOINT ["/ros_entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["ros2", "run", "lds01rr_lidar_ros2", "lidar_node"] 
