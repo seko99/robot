@@ -1,4 +1,4 @@
-lds01rr_lidar_node:
+robot-lidar:
   ros__parameters:
     port: "/dev/ttyS5"
     baud_rate: 115200

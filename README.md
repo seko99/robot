@@ -28,7 +28,7 @@ robot/
 │   ├── robot_odometry/     # Расчет одометрии
 │   ├── robot_sonar/        # Обработка ультразвука
 │   ├── robot_teleop/       # Телеуправление
-│   ├── lds01rr_lidar_ros2/ # Драйвер лидара LDS01RR
+│   ├── robot_lidar/ # Драйвер лидара LDS01RR
 │   ├── install_packages.sh # Установка пакетов
 │   ├── run_robot.sh        # Запуск системы
 │   ├── upload_packages.sh  # Загрузка на робота
@@ -120,7 +120,7 @@ robot/
 - **Конфигурация**: `config/teleop_params.yaml`
 - **Docker**: Собственный контейнер с entrypoint скриптом
 
-#### 📦 lds01rr_lidar_ros2
+#### 📦 robot_lidar
 
 Драйвер для лидара LDS01RR
 
@@ -152,14 +152,14 @@ docker build -t robot_sonar .
 cd ../robot_odometry/
 docker build -t robot_odometry .
 
-cd ../lds01rr_lidar_ros2/
-docker build -t lds01rr_lidar .
+cd ../robot_lidar/
+docker build -t robot_lidar .
 
 # Запуск отдельных пакетов в контейнерах
 docker run --rm --device=/dev/ttyUSB0 robot_teleop
 docker run --rm --device=/dev/ttyUSB1 robot_sonar
 docker run --rm --device=/dev/ttyUSB0 robot_odometry
-docker run --rm --device=/dev/ttyUSB2 lds01rr_lidar
+docker run --rm --device=/dev/ttyUSB2 robot_lidar
 
 # Запуск с сетевым режимом host для ROS2 DDS
 docker run --rm --network host --device=/dev/ttyUSB0 robot_teleop
@@ -375,7 +375,7 @@ ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
 
 ```bash
 # Проверка лидара
-cd ROS2/lds01rr_lidar_ros2/
+cd ROS2/robot_lidar/
 python3 test_driver.py
 
 # Диагностика всех пакетов

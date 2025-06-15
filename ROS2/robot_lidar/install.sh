@@ -34,7 +34,7 @@ echo "Installing Python dependencies..."
 pip3 install pyserial
 
 # Copy package to workspace
-PACKAGE_DIR="$ROS_WS/src/lds01rr_lidar_ros2"
+PACKAGE_DIR="$ROS_WS/src/robor_lidar"
 echo "Copying package to $PACKAGE_DIR..."
 
 if [ -d "$PACKAGE_DIR" ]; then

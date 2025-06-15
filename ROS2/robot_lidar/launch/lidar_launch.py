@@ -44,9 +44,9 @@ def generate_launch_description():
     
     # Create lidar node
     lidar_node = Node(
-        package='lds01rr_lidar_ros2',
+        package='robot_lidar',
         executable='lidar_node',
-        name='lds01rr_lidar_node',
+        name='robot-lidar',
         output='screen',
         parameters=[{
             'port': LaunchConfiguration('port'),

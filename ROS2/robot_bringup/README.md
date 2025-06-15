@@ -9,13 +9,13 @@ ROS2 пакет для запуска всех компонентов робот
 - Одометрия (`robot_odometry`)
 - Телеуправление (`robot_teleop`)
 - Ультразвуковой датчик (`robot_sonar`)
-- Лидар LDS01RR (`lds01rr_lidar_ros2`)
+- Лидар LDS01RR (`robot_lidar`)
 
 ## Установка
 
 ```bash
 cd ~/ros2_ws/src
-# Скопируйте все пакеты robot_* и lds01rr_lidar_ros2 в src
+# Скопируйте все пакеты robot_* в src
 cd ~/ros2_ws
 colcon build
 source install/setup.bash
@@ -107,4 +107,4 @@ ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
 - `robot_odometry`
 - `robot_teleop`
 - `robot_sonar`
-- `lds01rr_lidar_ros2`
+- `robot_lidar`

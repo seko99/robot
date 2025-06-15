@@ -5,7 +5,7 @@ Test script for LDS01RR driver without ROS2
 
 import sys
 import time
-from lds01rr_lidar_ros2.lds01rr_driver import LDS01RRDriver
+from robot_lidar.lds01rr_driver import LDS01RRDriver
 
 
 def main():

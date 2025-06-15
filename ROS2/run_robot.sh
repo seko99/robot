@@ -48,7 +48,7 @@ elif [ "$1" = "sonar" ]; then
     ros2 run robot_sonar sonar_node
 elif [ "$1" = "lidar" ]; then
     echo "Запуск лидара..."
-    ros2 run lds01rr_lidar_ros2 lidar_node
+    ros2 run robot_lidar lidar_node
 elif [ "$1" = "keyboard" ]; then
     echo "Запуск управления с клавиатуры..."
     ros2 run teleop_twist_keyboard teleop_twist_keyboard

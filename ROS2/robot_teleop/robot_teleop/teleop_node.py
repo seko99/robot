@@ -141,10 +141,15 @@ def main(args=None):
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
-        node.get_logger().info("Получен сигнал остановки...")
+        pass
     finally:
-        node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            try:
+                node.get_logger().info('Shutting down robot_teleop node')
+            except:
+                pass
+            node.destroy_node()
+            rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

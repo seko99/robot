@@ -7,7 +7,7 @@
 - `robot_sonar/Dockerfile` - контейнер для ультразвукового сенсора
 - `robot_odometry/Dockerfile` - контейнер для одометрии
 - `robot_teleop/Dockerfile` - контейнер для телеуправления
-- `lds01rr_lidar_ros2/Dockerfile` - контейнер для лидара
+- `robot_lidar/Dockerfile` - контейнер для лидара
 - `docker-compose.yml` - полная конфигурация со всеми сервисами
 - `docker-compose.robot.yml` - упрощенная конфигурация только для основных нод
 - `docker-compose.discovery.yml` - конфигурация с ROS Discovery Server для более надежной сетевой связи

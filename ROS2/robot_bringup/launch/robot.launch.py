@@ -103,9 +103,9 @@ def generate_launch_description():
         ),
         
         Node(
-            package='lds01rr_lidar_ros2',
+            package='robot_lidar',
             executable='lidar_node',
-            name='lds01rr_lidar',
+            name='robot_lidar',
             output='screen',
             condition=IfCondition(LaunchConfiguration('use_lidar')),
             parameters=[{

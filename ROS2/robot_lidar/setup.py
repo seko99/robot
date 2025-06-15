@@ -2,7 +2,7 @@ from setuptools import setup
 import os
 from glob import glob
 
-package_name = 'lds01rr_lidar_ros2'
+package_name = 'robot_lidar'
 
 setup(
     name=package_name,
@@ -24,9 +24,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'lidar_node = lds01rr_lidar_ros2.lidar_node:main',
-            'lidar_node_v2 = lds01rr_lidar_ros2.lds01rr_node_v2:main',
-            'test_driver_v2 = lds01rr_lidar_ros2.test_driver_v2:main',
+            'lidar_node = robot_lidar.lidar_node:main',
+            'test_driver_v2 = robot_lidar.test_driver_v2:main',
         ],
     },
 ) 

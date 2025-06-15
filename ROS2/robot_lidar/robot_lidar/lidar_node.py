@@ -17,7 +17,7 @@ from .lds01rr_driver_v2 import LDS01RRDriverV2
 
 class LDS01RRLidarNode(Node):
     def __init__(self):
-        super().__init__('lds01rr_lidar_node')
+        super().__init__('robot_lidar')
         
         # Declare parameters
         self.declare_parameter('serial_port', '/dev/ttyS5')
@@ -153,8 +153,13 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
-        node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            try:
+                node.get_logger().info('Shutting down robot_lidar node')
+            except:
+                pass
+            node.destroy_node()
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':

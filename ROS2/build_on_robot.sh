@@ -28,7 +28,7 @@ pip3 install pyserial setuptools
 
 # Проверка структуры пакетов
 echo "Проверка структуры пакетов..."
-for pkg in lds01rr_lidar_ros2 robot_odometry robot_teleop robot_sonar robot_bringup; do
+for pkg in robot_lidar robot_odometry robot_teleop robot_sonar robot_bringup; do
     echo "Пакет $pkg:"
     if [ -d "src/$pkg" ]; then
         echo "  ✅ Директория пакета существует"
@@ -59,13 +59,13 @@ rm -rf build/ install/ log/
 
 # Сборка всех пакетов с подробным выводом
 echo "Сборка только наших пакетов..."
-colcon build --packages-select lds01rr_lidar_ros2 robot_odometry robot_teleop robot_sonar robot_bringup --cmake-args -DCMAKE_BUILD_TYPE=Release
+colcon build --packages-select robot_lidar robot_odometry robot_teleop robot_sonar robot_bringup --cmake-args -DCMAKE_BUILD_TYPE=Release
 
 # Проверка результатов сборки
 # Проверка результатов сборки
 echo "Проверка результатов сборки..."
 
-for pkg in robot_odometry robot_teleop robot_sonar; do
+for pkg in robot_lidar robot_odometry robot_teleop robot_sonar; do
     echo "Проверка $pkg:"
     if [ -d "install/$pkg/lib/$pkg" ]; then
         echo "  ✅ Директория lib создана"
@@ -101,7 +101,7 @@ echo "=== Сборка завершена ==="
 
 # Проверка доступных исполняемых файлов
 echo "Проверка доступных исполняемых файлов:"
-for pkg in lds01rr_lidar_ros2 robot_odometry robot_teleop robot_sonar; do
+for pkg in robot_lidar robot_odometry robot_teleop robot_sonar; do
     echo "$pkg:"
     ros2 pkg executables $pkg || echo "  Исполняемые файлы не найдены"
 done

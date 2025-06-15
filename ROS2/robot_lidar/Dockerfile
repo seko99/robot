@@ -14,8 +14,8 @@ RUN pip3 install pyserial>=3.4 setuptools>=45.2.0
 # Создание рабочей директории
 WORKDIR /ros2_ws
 
-# Копирование пакета lds01rr_lidar_ros2
-COPY . /ros2_ws/src/lds01rr_lidar_ros2/
+# Копирование пакета robot_lidar
+COPY . /ros2_ws/src/robot_lidar/
 COPY fastdds_config.xml /root/
 
 # Инициализация rosdep
@@ -27,7 +27,7 @@ RUN cd /ros2_ws && rosdep install --from-paths src --ignore-src -r -y
 # Сборка пакета
 RUN cd /ros2_ws && \
     . /opt/ros/humble/setup.sh && \
-    colcon build --packages-select lds01rr_lidar_ros2
+    colcon build --packages-select robot_lidar
 
 # Копирование и настройка скрипта запуска
 COPY entrypoint.sh /entrypoint.sh
@@ -35,4 +35,4 @@ RUN chmod +x /entrypoint.sh
 
 # Точка входа
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["ros2", "run", "lds01rr_lidar_ros2", "lidar_node"] 
+CMD ["ros2", "run", "robot_lidar", "lidar_node"] 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>lds01rr_lidar_ros2</name>
+  <name>robot_lidar</name>
   <version>1.0.0</version>
   <description>ROS2 driver for LDS01RR Lidar</description>
   <maintainer email="your.email@example.com">Your Name</maintainer>

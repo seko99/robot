@@ -32,7 +32,7 @@ echo "Загрузка пакетов..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Загрузка каждого пакета
-for package in lds01rr_lidar_ros2 robot_odometry robot_teleop robot_sonar robot_bringup; do
+for package in robot_lidar robot_odometry robot_teleop robot_sonar robot_bringup; do
     if [ -d "$SCRIPT_DIR/$package" ]; then
         echo "Загрузка пакета $package..."
         scp -i "$SSH_KEY" -r "$SCRIPT_DIR/$package" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH/"

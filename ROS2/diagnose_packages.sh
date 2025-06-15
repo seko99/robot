@@ -15,7 +15,7 @@ echo "Доступные модули setuptools:"
 python3 -c "import setuptools; print(f'setuptools версия: {setuptools.__version__}')"
 
 # Проверка каждого пакета
-for pkg in lds01rr_lidar_ros2 robot_odometry robot_teleop robot_sonar robot_bringup; do
+for pkg in robot_lidar robot_odometry robot_teleop robot_sonar robot_bringup; do
     echo ""
     echo "=== Проверка пакета $pkg ==="
     

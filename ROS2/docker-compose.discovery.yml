@@ -59,7 +59,7 @@ services:
   # Лидар нода
   lidar:
     build:
-      context: ./lds01rr_lidar_ros2
+      context: ./robot_lidar
       dockerfile: Dockerfile
     container_name: lidar
     network_mode: host
