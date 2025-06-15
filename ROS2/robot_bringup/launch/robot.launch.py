@@ -15,11 +15,6 @@ def generate_launch_description():
             description='Serial port for odometry Arduino'
         ),
         DeclareLaunchArgument(
-            'teleop_serial_port', 
-            default_value='/dev/ttyUSB0',
-            description='Serial port for teleop Arduino'
-        ),
-        DeclareLaunchArgument(
             'sonar_serial_port',
             default_value='/dev/ttyUSB1', 
             description='Serial port for sonar Arduino'
@@ -54,8 +49,13 @@ def generate_launch_description():
             default_value='1.57',
             description='Maximum angular velocity in rad/s'
         ),
+        DeclareLaunchArgument(
+            'simulation_mode',
+            default_value='false',
+            description='Run in simulation mode (no serial connections)'
+        ),
         
-        # Запуск одометрии
+        # Запуск одометрии с интегрированным teleop
         Node(
             package='robot_odometry',
             executable='odometry_node',
@@ -65,22 +65,10 @@ def generate_launch_description():
                 'serial_port': LaunchConfiguration('odometry_serial_port'),
                 'baud_rate': 115200,
                 'wheel_base': LaunchConfiguration('wheel_base'),
-            }]
-        ),
-        
-        # Запуск телеуправления
-        Node(
-            package='robot_teleop',
-            executable='teleop_node',
-            name='teleop_node',
-            output='screen',
-            parameters=[{
-                'serial_port': LaunchConfiguration('teleop_serial_port'),
-                'baud_rate': 115200,
                 'max_linear': LaunchConfiguration('max_linear'),
                 'max_angular': LaunchConfiguration('max_angular'),
-                'wheel_base': LaunchConfiguration('wheel_base'),
                 'max_motor_speed': 255,
+                'simulation_mode': LaunchConfiguration('simulation_mode'),
             }]
         ),
         
@@ -102,6 +90,7 @@ def generate_launch_description():
             }]
         ),
         
+        # Запуск лидара (условно)
         Node(
             package='robot_lidar',
             executable='lidar_node',

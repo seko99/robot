@@ -27,7 +27,7 @@ setup(
     zip_safe=True,
     maintainer='seko',
     maintainer_email='seko@example.com',
-    description='ROS2 пакет для публикации одометрии робота на основе данных с Arduino',
+    description='ROS2 пакет для публикации одометрии и управления роботом с интегрированным телеуправлением',
     license='MIT',
     tests_require=['pytest'],
     entry_points={

@@ -6,8 +6,7 @@ ROS2 пакет для запуска всех компонентов робот
 
 Этот пакет объединяет запуск всех основных компонентов робота:
 
-- Одометрия (`robot_odometry`)
-- Телеуправление (`robot_teleop`)
+- Одометрия с интегрированным телеуправлением (`robot_odometry`)
 - Ультразвуковой датчик (`robot_sonar`)
 - Лидар LDS01RR (`robot_lidar`)
 
@@ -32,7 +31,6 @@ ros2 launch robot_bringup robot.launch.py
 # Запуск с кастомными портами
 ros2 launch robot_bringup robot.launch.py \
   odometry_serial_port:=/dev/ttyUSB0 \
-  teleop_serial_port:=/dev/ttyUSB0 \
   sonar_serial_port:=/dev/ttyUSB1 \
   lidar_serial_port:=/dev/ttyS5
 
@@ -43,6 +41,9 @@ ros2 launch robot_bringup robot.launch.py use_sonar:=false use_lidar:=false
 ros2 launch robot_bringup robot.launch.py \
   max_linear:=0.8 \
   max_angular:=2.0
+
+# Запуск в режиме симуляции (без подключения к Arduino)
+ros2 launch robot_bringup robot.launch.py simulation_mode:=true
 ```
 
 ### Проверка работы
@@ -69,8 +70,7 @@ ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
 
 ### Серийные порты
 
-- `odometry_serial_port`: Порт для Arduino с одометрией (по умолчанию: /dev/ttyUSB0)
-- `teleop_serial_port`: Порт для Arduino с моторами (по умолчанию: /dev/ttyUSB0)
+- `odometry_serial_port`: Порт для Arduino с одометрией и моторами (по умолчанию: /dev/ttyUSB0)
 - `sonar_serial_port`: Порт для Arduino с сонаром (по умолчанию: /dev/ttyUSB1)
 - `lidar_serial_port`: Порт для лидара LDS01RR (по умолчанию: /dev/ttyS5)
 
@@ -87,6 +87,7 @@ ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
 
 - `use_sonar`: Включать ли сонар (по умолчанию: true)
 - `use_lidar`: Включать ли лидар (по умолчанию: true)
+- `simulation_mode`: Запуск в режиме симуляции без подключения к Arduino (по умолчанию: false)
 
 ## Топики
 
@@ -98,13 +99,16 @@ ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
 
 ### Подписываемые топики
 
-- `/cmd_vel` (geometry_msgs/Twist) - команды управления скоростью
+- `/cmd_vel` (geometry_msgs/Twist) - команды управления скоростью (обрабатываются нодой odometry)
 
 ## Зависимости
 
 Этот пакет требует установки следующих пакетов:
 
-- `robot_odometry`
-- `robot_teleop`
+- `robot_odometry` (с интегрированным телеуправлением)
 - `robot_sonar`
 - `robot_lidar`
+
+## Изменения в архитектуре
+
+В новой версии логика телеуправления интегрирована в пакет `robot_odometry` для избежания конфликтов доступа к одному и тому же серийному порту. Теперь одна нода обрабатывает и команды движения, и данные одометрии.

@@ -419,6 +419,18 @@ ssh -i ~/.ssh/id_rsa orangepi@192.168.2.141
 scp -i ~/.ssh/id_rsa file.py orangepi@192.168.2.141:~
 ```
 
+## Камера
+
+### На роботе
+```bash
+ros2 run usb_cam usb_cam_node_exe --ros-args -p video_device:="/dev/video1" -p pixel_format:="yuyv"
+```
+
+### На GUI
+```bash
+ros2 run rqt_image_view rqt_image_view --ros-args -r image:=/image_raw
+```
+
 ### Удаленное управление
 
 ```bash
