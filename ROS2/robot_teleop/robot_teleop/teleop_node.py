@@ -29,18 +29,24 @@ class TeleopNode(Node):
         self.declare_parameter('max_angular', 1.57)  # рад/с
         self.declare_parameter('wheel_base', 0.3)  # м
         self.declare_parameter('max_motor_speed', 255)  # максимальная скорость мотора PWM
+        self.declare_parameter('simulation_mode', False)
         
-        # Подключение к Arduino
-        port = self.get_parameter('serial_port').value
-        baud = self.get_parameter('baud_rate').value
+        self.simulation_mode = self.get_parameter('simulation_mode').value
         
-        try:
-            self.ser = serial.Serial(port, baud, timeout=0.1)
-            time.sleep(2)  # Ждем инициализации Arduino
-            self.get_logger().info(f"Connected to Arduino on {port}")
-        except Exception as e:
-            self.get_logger().error(f"Failed to connect to Arduino: {e}")
-            raise
+        if not self.simulation_mode:
+            port = self.get_parameter('serial_port').value
+            baud = self.get_parameter('baud_rate').value
+            
+            try:
+                self.ser = serial.Serial(port, baud, timeout=0.1)
+                time.sleep(2)  # Ждем инициализации Arduino
+                self.get_logger().info(f"Connected to Arduino on {port}")
+            except Exception as e:
+                self.get_logger().error(f"Failed to connect to Arduino: {e}")
+                raise
+        else:
+            self.ser = None
+            self.get_logger().info("Running in simulation mode (no Arduino connection)")
         
         # Подписка на команды
         self.subscription = self.create_subscription(
@@ -51,6 +57,19 @@ class TeleopNode(Node):
         
     def send_command(self, cmd, value):
         """Отправка команды мотору через бинарный протокол"""
+        if self.simulation_mode:
+            cmd_names = {
+                CMD_LEFT_FORWARD: "LEFT_FORWARD",
+                CMD_LEFT_BACKWARD: "LEFT_BACKWARD", 
+                CMD_RIGHT_FORWARD: "RIGHT_FORWARD",
+                CMD_RIGHT_BACKWARD: "RIGHT_BACKWARD",
+                CMD_LEFT_STOP: "LEFT_STOP",
+                CMD_RIGHT_STOP: "RIGHT_STOP",
+                CMD_STOP_MOTORS: "STOP_MOTORS"
+            }
+            self.get_logger().info(f"[SIM] Motor command: {cmd_names.get(cmd, f'CMD_{cmd}')} = {value}")
+            return True
+            
         if not self.ser or not self.ser.is_open:
             self.get_logger().error("Serial порт не открыт!")
             return False

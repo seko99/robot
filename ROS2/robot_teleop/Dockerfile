@@ -17,6 +17,9 @@ WORKDIR /ros2_ws
 # Копирование пакета robot_teleop
 COPY . /ros2_ws/src/robot_teleop/
 
+# Копирование конфигурации FastDDS
+COPY fastdds_config.xml /root/
+
 # Инициализация rosdep
 RUN rosdep update
 

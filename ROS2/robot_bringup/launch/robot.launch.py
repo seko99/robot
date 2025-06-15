@@ -25,6 +25,11 @@ def generate_launch_description():
             description='Serial port for sonar Arduino'
         ),
         DeclareLaunchArgument(
+            'lidar_serial_port',
+            default_value='/dev/ttyS5', 
+            description='Serial port for LDS01RR lidar'
+        ),
+        DeclareLaunchArgument(
             'wheel_base',
             default_value='0.3',
             description='Distance between wheels in meters'
@@ -33,6 +38,21 @@ def generate_launch_description():
             'use_sonar',
             default_value='true',
             description='Whether to launch sonar node'
+        ),
+        DeclareLaunchArgument(
+            'use_lidar',
+            default_value='true',
+            description='Whether to launch lidar node'
+        ),
+        DeclareLaunchArgument(
+            'max_linear',
+            default_value='0.5',
+            description='Maximum linear velocity in m/s'
+        ),
+        DeclareLaunchArgument(
+            'max_angular',
+            default_value='1.57',
+            description='Maximum angular velocity in rad/s'
         ),
         
         # Запуск одометрии
@@ -57,8 +77,8 @@ def generate_launch_description():
             parameters=[{
                 'serial_port': LaunchConfiguration('teleop_serial_port'),
                 'baud_rate': 115200,
-                'max_linear': 0.5,
-                'max_angular': 1.57,
+                'max_linear': LaunchConfiguration('max_linear'),
+                'max_angular': LaunchConfiguration('max_angular'),
                 'wheel_base': LaunchConfiguration('wheel_base'),
                 'max_motor_speed': 255,
             }]
@@ -79,6 +99,21 @@ def generate_launch_description():
                 'max_range': 4.0,
                 'field_of_view': 0.1,
                 'publish_rate': 10.0,
+            }]
+        ),
+        
+        Node(
+            package='lds01rr_lidar_ros2',
+            executable='lidar_node',
+            name='lds01rr_lidar',
+            output='screen',
+            condition=IfCondition(LaunchConfiguration('use_lidar')),
+            parameters=[{
+                'port': LaunchConfiguration('lidar_serial_port'),
+                'baud_rate': 115200,
+                'frame_id': 'lidar',
+                'publish_tf': True,
+                'parent_frame': 'base_link',
             }]
         ),
     ])

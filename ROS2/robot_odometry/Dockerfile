@@ -16,6 +16,7 @@ WORKDIR /ros2_ws
 
 # Копирование пакета robot_odometry
 COPY . /ros2_ws/src/robot_odometry/
+COPY fastdds_config.xml /root/
 
 # Инициализация rosdep
 RUN rosdep update

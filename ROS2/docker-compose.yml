@@ -8,27 +8,31 @@ services:
     network_mode: host
     environment:
       - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
-      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
-      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/root/fastdds_config.xml
+      - ROS_DISABLE_LOANED_MESSAGES=1
       - ROS_LOCALHOST_ONLY=0
+      - RCUTILS_LOGGING_BUFFERED_STREAM=1
     command: ros2 daemon start
     restart: unless-stopped
 
-  # Сонар нода
   robot-sonar:
     build:
-      context: ./robot_sonar
+      context: ./src/robot_sonar
       dockerfile: Dockerfile
     container_name: robot-sonar
     network_mode: host
+    stdin_open: true
+    tty: true
     devices:
-      - /dev/ttyUSB0:/dev/ttyUSB0
       - /dev/ttyUSB1:/dev/ttyUSB1
     environment:
       - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
-      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
-      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/root/fastdds_config.xml
+      - ROS_DISABLE_LOANED_MESSAGES=1
       - ROS_LOCALHOST_ONLY=0
+      - RCUTILS_LOGGING_BUFFERED_STREAM=1
     volumes:
       - /dev:/dev
     privileged: true
@@ -36,21 +40,23 @@ services:
     depends_on:
       - ros2-daemon
 
-  # Одометрия нода
   robot-odometry:
     build:
-      context: ./robot_odometry
+      context: ./src/robot_odometry
       dockerfile: Dockerfile
     container_name: robot-odometry
     network_mode: host
+    stdin_open: true
+    tty: true
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
-      - /dev/ttyUSB1:/dev/ttyUSB1
     environment:
       - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
-      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
-      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/root/fastdds_config.xml
+      - ROS_DISABLE_LOANED_MESSAGES=1
       - ROS_LOCALHOST_ONLY=0
+      - RCUTILS_LOGGING_BUFFERED_STREAM=1
     volumes:
       - /dev:/dev
     privileged: true
@@ -58,20 +64,21 @@ services:
     depends_on:
       - ros2-daemon
 
-  # Лидар нода
-  lidar:
+  robot-lidar:
     build:
-      context: ./lds01rr_lidar_ros2
+      context: ./src/lds01rr_lidar_ros2
       dockerfile: Dockerfile
-    container_name: lidar
+    container_name: robot-lidar
     network_mode: host
     devices:
-      - /dev/ttyUSB0:/dev/ttyS5
+      - /dev/ttyS5:/dev/ttyS5
     environment:
       - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
-      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
-      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/root/fastdds_config.xml
+      - ROS_DISABLE_LOANED_MESSAGES=1
       - ROS_LOCALHOST_ONLY=0
+      - RCUTILS_LOGGING_BUFFERED_STREAM=1
     volumes:
       - /dev:/dev
     privileged: true
@@ -79,39 +86,27 @@ services:
     depends_on:
       - ros2-daemon
 
-  # Телеоп нода (опционально)
   robot-teleop:
     build:
-      context: ./robot_teleop
+      context: ./src/robot_teleop
       dockerfile: Dockerfile
     container_name: robot-teleop
     network_mode: host
     stdin_open: true
     tty: true
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
     environment:
       - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
-      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
-      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/root/fastdds_config.xml
+      - ROS_DISABLE_LOANED_MESSAGES=1
       - ROS_LOCALHOST_ONLY=0
-    restart: "no" # Не перезапускать автоматически, так как это интерактивная нода
-    depends_on:
-      - ros2-daemon
-
-  # RViz для визуализации (опционально)
-  rviz:
-    image: osrf/ros:jazzy-desktop
-    container_name: rviz
-    network_mode: host
-    environment:
-      - DISPLAY=${DISPLAY}
-      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
-      - RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
-      - CYCLONEDX_URI=<Discovery><Peers><Peer address="localhost"/><Peer address="${ROBOT_IP:-192.168.1.100}"/></Peers></Discovery>
-      - ROS_LOCALHOST_ONLY=0
+      - RCUTILS_LOGGING_BUFFERED_STREAM=1
+    command: ros2 run robot_teleop teleop_node
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - $HOME/.Xauthority:/root/.Xauthority:rw
-    command: rviz2
-    restart: "no"
+      - /dev:/dev
+    privileged: true
+    restart: unless-stopped
     depends_on:
       - ros2-daemon

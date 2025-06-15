@@ -16,6 +16,7 @@ WORKDIR /ros2_ws
 
 # Копирование пакета lds01rr_lidar_ros2
 COPY . /ros2_ws/src/lds01rr_lidar_ros2/
+COPY fastdds_config.xml /root/
 
 # Инициализация rosdep
 RUN rosdep update
