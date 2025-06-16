@@ -165,6 +165,13 @@ docker run --rm --device=/dev/ttyUSB2 robot_lidar
 docker run --rm --network host --device=/dev/ttyUSB0 robot_teleop
 ```
 
+### pyhton3 зависимости
+
+```bash
+sudo apt install python3-pip
+sudo apt install python3-serial
+```
+
 ### Запуск системы (нативно)
 
 ```bash
@@ -324,7 +331,7 @@ ros2 topic echo /cmd_vel
 ### Программное обеспечение
 
 - **Arduino IDE** или **arduino-cli**
-- **ROS2 Humble** (на Orange Pi) или **Docker**
+- **ROS2 Jazzy** (на Orange Pi) или **Docker**
 - **Python 3.8+**
 - **pyserial** для Python скриптов
 - **colcon** для сборки ROS2 пакетов (при нативной установке)
@@ -409,6 +416,30 @@ cd ROS2/
 
 ## 🌐 Сетевая настройка
 
+### Cyclone DDS
+
+```bash
+sudo apt install ros-jazzy-rmw-cyclonedds-cpp
+export RMW_IMPLEMENTATION=rmw_cyclonedx_cpp
+echo "export RMW_IMPLEMENTATION=rmw_cyclonedx_cpp" >> ~/.bashrc
+```
+
+#### Проверка
+
+##### host1
+
+```bash
+sudo apt install ros-jazzy-demo-nodes-cpp
+ros2 run demo_nodes_cpp listener
+```
+
+##### host2
+
+```bash
+sudo apt install ros-jazzy-demo-nodes-cpp
+ros2 run demo_nodes_cpp talker
+```
+
 ### SSH подключение
 
 ```bash
@@ -421,12 +452,20 @@ scp -i ~/.ssh/id_rsa file.py orangepi@192.168.2.141:~
 
 ## Камера
 
+### Установка
+
+```bash
+sudo apt install ros-jazzy-usb-cam
+```
+
 ### На роботе
+
 ```bash
 ros2 run usb_cam usb_cam_node_exe --ros-args -p video_device:="/dev/video1" -p pixel_format:="yuyv"
 ```
 
 ### На GUI
+
 ```bash
 ros2 run rqt_image_view rqt_image_view --ros-args -r image:=/image_raw
 ```

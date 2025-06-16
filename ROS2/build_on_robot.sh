@@ -8,7 +8,10 @@ echo "=== Сборка ROS2 пакетов на роботе ==="
 cd ~/ros2_ws
 
 # Источник ROS2 environment
-if [ -f "/opt/ros/humble/setup.bash" ]; then
+if [ -f "/opt/ros/jazzy/setup.bash" ]; then
+    source /opt/ros/jazzy/setup.bash
+    echo "Используется ROS2 Jazzy"
+elif [ -f "/opt/ros/humble/setup.bash" ]; then
     source /opt/ros/humble/setup.bash
     echo "Используется ROS2 Humble"
 elif [ -f "/opt/ros/galactic/setup.bash" ]; then

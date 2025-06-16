@@ -12,7 +12,7 @@ if [ ! -f "$HOME/ros2_ws/install/setup.bash" ]; then
 fi
 
 # Настройка среды
-source /opt/ros/humble/setup.bash 2>/dev/null || source /opt/ros/foxy/setup.bash
+source /opt/ros/jazzy/setup.bash 2>/dev/null || /opt/ros/humble/setup.bash 2>/dev/null || source /opt/ros/foxy/setup.bash
 source $HOME/ros2_ws/install/setup.bash
 
 echo "Доступные команды запуска:"
