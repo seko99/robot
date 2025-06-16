@@ -51,3 +51,7 @@ scp -i "$SSH_KEY" "$SCRIPT_DIR/requirements.txt" "$REMOTE_USER@$REMOTE_HOST:~/ro
 scp -i "$SSH_KEY" "$SCRIPT_DIR/docker-compose.discovery.yml" "$REMOTE_USER@$REMOTE_HOST:~/ros2_ws/"
 scp -i "$SSH_KEY" "$SCRIPT_DIR/docker-compose.robot.yml" "$REMOTE_USER@$REMOTE_HOST:~/ros2_ws/"
 scp -i "$SSH_KEY" "$SCRIPT_DIR/docker-compose.yml" "$REMOTE_USER@$REMOTE_HOST:~/ros2_ws/"
+
+echo "Загрузка тестовых скриптов..."
+scp -i "$SSH_KEY" "$SCRIPT_DIR/../Motors/test_motors.py" "$REMOTE_USER@$REMOTE_HOST:~/ros2_ws/"
+scp -i "$SSH_KEY" "$SCRIPT_DIR/../Sensors/test_sensors.py" "$REMOTE_USER@$REMOTE_HOST:~/ros2_ws/"

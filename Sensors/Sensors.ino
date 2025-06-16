@@ -6,8 +6,8 @@
 
 #define CMD_SENSOR_DATA 16
 
-const int trigPin = 9;
-const int echoPin = 10;
+const int echoPin = 2;
+const int trigPin = 3;
 
 long systemTimestamp = 0;
 int distance = 0;
@@ -22,14 +22,18 @@ struct SensorsData {
     float us_distance;
 };
 
-void updateDistance() {
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
+float getDist() {
+  digitalWrite(trigPin, LOW); 
+  delayMicroseconds(2); 
+  digitalWrite(trigPin, HIGH); 
+  delayMicroseconds(10); 
+  digitalWrite(trigPin, LOW); 
 
-  long duration = pulseIn(echoPin, HIGH);
-  
-  distance = duration * 0.034 / 2;
+  // измеряем время ответного импульса
+  uint32_t us = pulseIn(echoPin, HIGH);
+
+  // считаем расстояние и возвращаем
+  return (us / 58.3);
 }
 
 void handleCommand(Command cmd) {
@@ -45,7 +49,7 @@ void handleCommand(Command cmd) {
 void sendSensorData() {
   SensorsData sensors;
   sensors.cmd = CMD_SENSOR_DATA;
-  sensors.us_distance = distance;
+  sensors.us_distance = getDist();
   Serial.write((byte*)&sensors, sizeof(SensorsData));
 }
 
@@ -67,9 +71,7 @@ void setup(){
 }
 
 void loop() {
-  updateDistance();
-
-  receiveCommand();
+  //receiveCommand();
 
   sendSensorData();
 

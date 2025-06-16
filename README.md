@@ -204,6 +204,20 @@ ssh -i ~/.ssh/id_rsa orangepi@192.168.2.141 'cd ~/ros2_ws && ./run_robot.sh full
 
 ### Компиляция Arduino кода
 
+#### arduino-cli
+
+```bash
+wget https://downloads.arduino.cc/arduino-cli/arduino-cli_latest_Linux_ARM64.tar.gz
+tar -xf arduino-cli_latest_Linux_ARM64.tar.gz
+sudo mv arduino-cli /usr/local/bin/
+
+/usr/local/bin/arduino-cli version
+
+arduino-cli core update-index
+arduino-cli core install arduino:avr
+
+```
+
 ```bash
 # Основной скрипт (компиляция и загрузка)
 ./compile.sh
