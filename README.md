@@ -464,27 +464,56 @@ ssh -i ~/.ssh/id_rsa orangepi@192.168.2.141
 scp -i ~/.ssh/id_rsa file.py orangepi@192.168.2.141:~
 ```
 
+## SLAM
+
+#### Установка
+
+```bash
+sudo apt install ros-jazzy-slam-toolbox
+```
+
+#### Настройка
+
+Поменять в **/opt/ros/jazzy/share/slam_toolbox/config/mapper_params_online_async.yaml**:
+
+```
+base_frame: base_link
+```
+
+
+#### Граф
+
+```bash
+ros2 run tf2_tools view_frames
+```
+
+#### Запуск
+
+```bash
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:=false
+```
+
 ## Камера
 
-### Установка
+#### Установка
 
 ```bash
 sudo apt install ros-jazzy-usb-cam
 ```
 
-### На роботе
+#### На роботе
 
 ```bash
 ros2 run usb_cam usb_cam_node_exe --ros-args -p video_device:="/dev/video1" -p pixel_format:="yuyv"
 ```
 
-### На GUI
+#### На GUI
 
 ```bash
 ros2 run rqt_image_view rqt_image_view --ros-args -r image:=/image_raw
 ```
 
-### Удаленное управление
+## Удаленное управление
 
 ```bash
 # Запуск робота

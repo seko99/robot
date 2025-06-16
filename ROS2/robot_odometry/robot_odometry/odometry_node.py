@@ -160,7 +160,7 @@ class OdometryNode(Node):
                 if len(data) == self.sensor_data_size:
                     # Распаковка структуры SensorData
                     unpacked = struct.unpack(self.sensor_data_format, data)
-                    timestamp, left_odo, right_odo, left_ticks, right_ticks, left_h2, right_h2, left_flag, right_flag = unpacked
+                    timestamp, right_odo, left_odo, left_ticks, right_ticks, left_h2, right_h2, left_flag, right_flag = unpacked
                     
                     # Обрабатываем одометрию (расстояния уже готовые в метрах)
                     self.process_odometry(left_odo, right_odo)
