@@ -54,6 +54,21 @@ def generate_launch_description():
             default_value='false',
             description='Run in simulation mode (no serial connections)'
         ),
+        DeclareLaunchArgument(
+            'lidar_max_frequency',
+            default_value='10.0',
+            description='Maximum lidar publish frequency in Hz'
+        ),
+        DeclareLaunchArgument(
+            'lidar_min_points',
+            default_value='180',
+            description='Minimum points required for lidar scan'
+        ),
+        DeclareLaunchArgument(
+            'lidar_partial_scans',
+            default_value='false',
+            description='Enable partial scan publishing for higher frequency'
+        ),
         
         # Запуск одометрии с интегрированным teleop
         Node(
@@ -98,11 +113,14 @@ def generate_launch_description():
             output='screen',
             condition=IfCondition(LaunchConfiguration('use_lidar')),
             parameters=[{
-                'port': LaunchConfiguration('lidar_serial_port'),
+                'serial_port': LaunchConfiguration('lidar_serial_port'),
                 'baud_rate': 115200,
                 'frame_id': 'lidar',
                 'publish_tf': True,
                 'parent_frame': 'base_link',
+                'max_publish_frequency': LaunchConfiguration('lidar_max_frequency'),
+                'min_points_for_scan': LaunchConfiguration('lidar_min_points'),
+                'allow_partial_scans': LaunchConfiguration('lidar_partial_scans'),
             }]
         ),
     ])
