@@ -54,4 +54,5 @@ scp -i "$SSH_KEY" "$SCRIPT_DIR/docker-compose.yml" "$REMOTE_USER@$REMOTE_HOST:~/
 
 echo "Загрузка тестовых скриптов..."
 scp -i "$SSH_KEY" "$SCRIPT_DIR/../Motors/test_motors.py" "$REMOTE_USER@$REMOTE_HOST:~/ros2_ws/"
+scp -i "$SSH_KEY" "$SCRIPT_DIR/../Motors/test_odometry.py" "$REMOTE_USER@$REMOTE_HOST:~/ros2_ws/"
 scp -i "$SSH_KEY" "$SCRIPT_DIR/../Sensors/test_sensors.py" "$REMOTE_USER@$REMOTE_HOST:~/ros2_ws/"

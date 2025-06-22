@@ -16,6 +16,10 @@
 #define LEFT_H1_PIN 4
 #define LEFT_H2_PIN 12
 #define TICKS_IN_METER 0.94 / 1000
+// 1058 1041 1035 1072
+#define LEFT_TICKS_IN_METER 1.052 / 1000
+// 1059 1047 1047 1056
+#define RIGHT_TICKS_IN_METER 1.051 / 1000
 #define STBY 11
 
 const bool motorsEnabled = true;
@@ -41,13 +45,24 @@ struct SensorData
   uint32_t timestamp;
   float left_odometry;
   float right_odometry;
-  uint16_t left_ticks;
-  uint16_t right_ticks;
+  long left_ticks;
+  long right_ticks;
   bool left_h2_state;
   bool right_h2_state;
   bool left_flag;
   bool right_flag;
 };
+
+bool left_flag = false;
+bool right_flag = false;
+bool left_h2_state = false;
+bool right_h2_state = false;
+long left_ticks = 0;
+long right_ticks = 0;
+
+long t = millis();
+float odomLeft = 0.0;
+float odomRight = 0.0;
 
 void handleCommand(Command cmd)
 {
@@ -145,13 +160,6 @@ void stopMotors()
   stopRightMotor();
 }
 
-bool left_flag = false;
-bool right_flag = false;
-bool left_h2_state = false;
-bool right_h2_state = false;
-int left_ticks = 0;
-int right_ticks = 0;
-
 float updateLeftOdometry()
 {
   bool state = digitalRead(LEFT_H1_PIN);
@@ -243,10 +251,6 @@ void sendSensorData(SensorData sensorData)
   Serial.write((byte *)&sensorData, sizeof(SensorData));
 }
 
-long t = millis();
-float odomLeft = 0.0;
-float odomRight = 0.0;
-
 void loop()
 {
   if (Serial.available() >= sizeof(Command))
@@ -259,7 +263,7 @@ void loop()
   odomLeft = updateLeftOdometry();
   odomRight = updateRightOdometry();
 
-  if (millis() - t > 100)
+  if (millis() - t > 50)
   {
     t = millis();
 

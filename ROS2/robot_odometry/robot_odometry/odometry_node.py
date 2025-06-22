@@ -28,7 +28,7 @@ class OdometryNode(Node):
         # Параметры
         self.declare_parameter('serial_port', '/dev/ttyUSB0')
         self.declare_parameter('baud_rate', 115200)
-        self.declare_parameter('wheel_base', 0.3)  # Расстояние между колесами
+        self.declare_parameter('wheel_base', 0.265)  # Расстояние между колесами
         self.declare_parameter('max_linear', 0.5)  # м/с
         self.declare_parameter('max_angular', 1.57)  # рад/с
         self.declare_parameter('max_motor_speed', 255)  # максимальная скорость мотора PWM
@@ -53,9 +53,9 @@ class OdometryNode(Node):
         
         # Формат структуры SensorData из Motors.ino
         # struct SensorData: uint32_t timestamp, float left_odometry, float right_odometry, 
-        #                   uint16_t left_ticks, uint16_t right_ticks, bool left_h2_state, 
+        #                   long left_ticks, long right_ticks, bool left_h2_state, 
         #                   bool right_h2_state, bool left_flag, bool right_flag
-        self.sensor_data_format = '<IffHH????'
+        self.sensor_data_format = '<Iffll????'
         self.sensor_data_size = struct.calcsize(self.sensor_data_format)
         
         # Инициализация переменных одометрии
@@ -160,7 +160,7 @@ class OdometryNode(Node):
                 if len(data) == self.sensor_data_size:
                     # Распаковка структуры SensorData
                     unpacked = struct.unpack(self.sensor_data_format, data)
-                    timestamp, right_odo, left_odo, left_ticks, right_ticks, left_h2, right_h2, left_flag, right_flag = unpacked
+                    timestamp, left_odo, right_odo, left_ticks, right_ticks, left_h2, right_h2, left_flag, right_flag = unpacked
                     
                     # Обрабатываем одометрию (расстояния уже готовые в метрах)
                     self.process_odometry(left_odo, right_odo)

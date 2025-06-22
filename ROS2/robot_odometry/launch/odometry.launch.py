@@ -19,7 +19,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             'wheel_base',
-            default_value='0.3',
+            default_value='0.265',
             description='Distance between wheels in meters'
         ),
         
